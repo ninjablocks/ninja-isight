@@ -1,0 +1,27 @@
+{
+  "name": "ninja-isight",
+  "version": "0.0.1",
+  "description": "ninja block iSight driver",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexxy/ninja-isight"
+  },
+  "keywords": [
+    "ninja",
+    "blocks",
+    "isight",
+    "camera",
+    "osx"
+  ],
+  "author": "Ninja Blocks",
+  "license": "BSD",
+  "config": {
+    "streamHost": "stream.ninja.is",
+    "streamPort": 443,
+    "blockToken": null
+  },
+  "dependencies": {
+    "imagesnap": "0.0.0"
+  }
+}
