@@ -1,4 +1,4 @@
 ninja-isight
 ============
 
-Ninja Blocks iSight Driver
+Ninja Blocks iSight Driver (OSX only)
