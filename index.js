@@ -26,22 +26,23 @@ function isight(opts, app) {
 	this.D = 1004;
 	
 	this.app = app;
+	this.log = app.log;
 	this.interval = undefined; // setInterval ref
 	this.present = false;
 
-	function init() {
+	if(os.platform() !== 'darwin') {
 
-		if(os.platform() !== 'darwin') {
+		this.log.error("isight: This module is only for OSX");
+		return;
+	}
 
-			mod.log.error("isight: This module is only for OSX");
-			return;
-		}
-		mod.log.info("isight: Assuming camera is present");
-		mod.emit('register', mod);
-		mod.plugin();
-	};
+	this.log.info("isight: Assuming camera is present");
+	app.once('client::up', function() {
 
-	init();
+		this.emit('register', this);
+		this.plugin();
+
+	}.bind(this));
 };
 
 isight.prototype.write = function write(data) {
@@ -61,9 +62,17 @@ isight.prototype.write = function write(data) {
 	var proto = (this.opts.streamPort == 443 ? https : http);
 
 	
-	postOpts.headers = res.headers;
-	postOpts.headers['X-Ninja-Token'] = mod.app.token;	
+	postOpts.headers = {
 
+		'Content-Type' : 'image/jpeg'
+		, 'Expires' : 'Mon, 3 Jan 2000 12:34:56 GMT'
+		, 'Pragma' : 'no-cache'
+		, 'transfer-encoding' : 'chunked'
+		, 'Connection' : 'keep-alive'
+		, 'X-Ninja-Token' : mod.app.token
+	};
+
+	var get = snap();
 	var post = proto.request(postOpts, function(res) {
 
 		res.on('end', function() {
@@ -72,17 +81,18 @@ isight.prototype.write = function write(data) {
 		});
 	});
 
-	var get = snap();
-
-	get.pipe(post).on('error', function(err) {
-
-		mod.log.error("isight: Error streaming snapshot: %s", err);
-	});
 	get.on('error', function(err) { 
 
 		mod.log.error("isight: Error retrieving snapshot: %s", err);
 	});
-	get.on('end', function() { post.end(); });
+	get.on('end', function() {
+
+		post.end(); 
+	});
+	get.pipe(post).on('error', function(err) {
+
+		mod.log.error("isight: Error streaming snapshot: %s", err);
+	});
 };
 
 isight.prototype.heartbeat = function heartbeat(bool) {
