@@ -40,6 +40,8 @@ function isight(opts, app) {
 		mod.emit('register', mod);
 		mod.plugin();
 	};
+
+	init();
 };
 
 isight.prototype.write = function write(data) {
