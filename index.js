@@ -24,6 +24,7 @@ function isight(opts, app) {
 	this.V = 0;
 	this.G = "0";
 	this.D = 1004;
+	this.name = 'iSight - ' + require('os').hostname();
 	
 	this.app = app;
 	this.log = app.log;
