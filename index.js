@@ -52,8 +52,8 @@ isight.prototype.write = function write(data) {
 	var
 		postOpts = {
 
-			host : this.opts.streamHost
-			, port : this.opts.streamPort
+			host : this.app.opts.streamHost
+			, port : this.app.opts.streamPort
 			, path : '/rest/v0/camera/' + this.guid + '/snapshot'
 			, method : 'POST'
 		}
